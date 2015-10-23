@@ -1,0 +1,109 @@
+= Header 1 =
+
+
+
+
+== Header 2 ==
+=== Header 3 ===
+'''bold'''
+=== Heading 3 ^[=#fnr.1][#fn.1 1]^
+''italic''
+
+[[WikiProcessors#CodeHighlightingSupport]]\\
+[[TracSyntaxColoring]]\\
+[[TracSyntaxColoring#language-supported]]
+{{{
+#!c++
+class Foo : public Bar
+{
+public:
+    Foo(int val);
+    void doSometing();
+private:
+    const int  _val;
+}
+}}}
+
+
+{{{
+#!python
+class Test:
+
+    def __init__(self):
+        print "Hello World"
+if __name__ == '__main__':
+   Test()
+}}}
+
+{{{
+#!cl
+(require 'org nil t)
+}}}
+
+{{{
+#!diff
+--- Version 55
++++ Version 56
+@@ -115,8 +115,9 @@
+     name='TracHelloWorld', version='1.0',
+     packages=find_packages(exclude=['*.tests*']),
+-    entry_points = """
+-        [trac.plugins]
+-        helloworld = myplugs.helloworld
+-    """,
++    entry_points = {
++        'trac.plugins': [
++            'helloworld = myplugs.helloworld',
++        ],
++    },
+ )
+}}}
+{{{
+#!sql
+SELECT count(*)
+      , department
+FROM  employee
+GROUP by department;
+}}}
+----
+[http://www.google.com Google Home Page]
+
+[wiki:WikiFormatting Trac Wiki Formatting Information]
+
+
+[[Latex(\sum{\frac{\alpha^{\beta^2}}{\delta + \alpha}})]]
+{{{
+#!Latex
+\frac{\alpha^{\beta^2}}{\delta + \alpha}
+}}}
+
+
+    = Heading 1
+    == Heading 2 #Explicit_ID
+    === Heading 3^([#Explicit_ID note])^
+    ==== Font Styles
+    * '''bold'''
+    * ''italic''
+    * ''''Wikipedia style'''
+    * `monospaced (*other markup ignored*)`
+    * Bullet list
+      on multiple lines
+      1. nested list
+         a. different numbering
+            styles
+    = Source code
+    This is a \\
+    line break
+    {{{
+    #!cpp
+    class Foo : public Bar
+    {
+    public:
+        Foo(int val);
+        void doSometing();
+    private:
+        const int  _val;
+    }
+    }}}
+
+            ![[MacroList(*)]]

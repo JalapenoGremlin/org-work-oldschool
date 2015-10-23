@@ -1,0 +1,193 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t title:t toc:nil todo:t |:t
+#+TITLE: tracwiki
+#+DATE: <2015-09-23 Wed>
+#+AUTHOR: Brian J. Carlson
+#+EMAIL: bcarlson@paradigm4.com
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 25.0.50.1 (Org mode 8.3.1)
+#+LATEX_HEADER: \definecolor{mygreen}{rgb}{0,0.6,0}
+#+LATEX_HEADER: \definecolor{mygray}{rgb}{0.5,0.5,0.5}
+#+LATEX_HEADER: \definecolor{mymauve}{rgb}{0.58,0,0.82}
+#+LATEX_HEADER: \lstset{ %
+#+LATEX_HEADER:   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+#+LATEX_HEADER:   basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+#+LATEX_HEADER:   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+#+LATEX_HEADER:   breaklines=true,                 % sets automatic line breaking
+#+LATEX_HEADER:   captionpos=b,                    % sets the caption-position to bottom
+#+LATEX_HEADER:   commentstyle=\color{mymauve},    % comment style
+#+LATEX_HEADER:   deletekeywords={...},            % if you want to delete keywords from the given language
+#+LATEX_HEADER:   escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+#+LATEX_HEADER:   extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+#+LATEX_HEADER:   % frame=single,	                   % adds a frame around the code
+#+LATEX_HEADER:   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+#+LATEX_HEADER:   keywordstyle=\color{blue},       % keyword style
+#+LATEX_HEADER:   language=C++,                 % the language of the code
+#+LATEX_HEADER:   % otherkeywords={*,...},            % if you want to add more keywords to the set
+#+LATEX_HEADER:   numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+#+LATEX_HEADER:   numbersep=5pt,                   % how far the line-numbers are from the code
+#+LATEX_HEADER:   numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+#+LATEX_HEADER:   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+#+LATEX_HEADER:   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+#+LATEX_HEADER:   showstringspaces=false,          % underline spaces within strings only
+#+LATEX_HEADER:   showtabs=false,                  % show tabs within strings adding particular underscores
+#+LATEX_HEADER:   stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+#+LATEX_HEADER:   stringstyle=\color{mymauve},     % string literal style
+#+LATEX_HEADER:   tabsize=2,	                   % sets default tabsize to 2 spaces
+#+LATEX_HEADER:   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+#+LATEX_HEADER: }
+
+* Notes:
+** elisp needed
+   #+BEGIN_SRC emacs-lisp
+   (setq org-footnote-auto-label 't)
+
+   ;; not related, but
+    (setq org-latex-listings 't)
+    (add-to-list 'org-latex-packages-alist
+    '("" "listings"))
+    (add-to-list 'org-latex-packages-alist '(""
+    "xcolor")) 
+
+   #+END_SRC
+   
+** [[https://trac.scidb.net/wiki/WikiFormatting][Trac Wiki Formatting]]
+** Org things
+   * You can make words *bold*, /italic/, _underlined_, =verbatim= and
+     ~code~, and, if you must, +strike-through+
+   * sub_script super^{script}
+   * Blockquote
+     #+BEGIN_QUOTE
+     This is a blockquote
+     #+END_QUOTE
+   * 
+* Heading 1
+  #+BEGIN_EXAMPLE
+  = Heading 1
+  #+END_EXAMPLE
+** Heading 2
+   #+BEGIN_EXAMPLE
+   == Heading 2
+   #+END_EXAMPLE
+*** Heading 3 [fn:hn: This is the footnote for =fn.1=]
+    #+BEGIN_EXAMPLE
+    === Heading 3 ^[=#fnr.1][#fn.1 1]^
+    At the bottom:
+    = Footnotes:
+    ^[#fnr.1 1] This is the footnote for `fn.1`
+    #+END_EXAMPLE
+* Font Styles
+  * *bold* \\
+    /italic/ \\
+    /*Bold and Italic*/ \\
+    =monospaced (*other markup ignored*)=\\
+    \rightarrow
+  #+BEGIN_EXAMPLE
+   *  ** bold** \\
+     //italic// \\
+     **//Bold and Italic//** \\
+     `monospaced (*other markup ignored*)`\\
+     \(\rightarrow\)
+  #+END_EXAMPLE
+* Paragraphs
+  First paragraph
+  on multiple lines
+
+  Second Paragraph
+  #+BEGIN_EXAMPLE
+  First paragraph
+  on multiple lines
+
+  Second Paragraph
+  #+END_EXAMPLE
+* Lists
+  * Bullet list
+    on multiple lines
+    1. nested list
+       1) different numbering
+          styles
+     #+BEGIN_EXAMPLE
+     * Bullet list
+       on multiple lines
+       1. nested list
+         a. different numbering
+            styles
+     #+END_EXAMPLE
+  #+BEGIN_COMMENT
+    Changing numbering-style may be tough in translation.
+    (possibly have an alist)
+  #+END_COMMENT
+* Definition Lists
+  * term :: definition on
+       multiple lines
+  #+BEGIN_EXAMPLE
+  term:: definition on
+         multiple lines
+  #+END_EXAMPLE
+
+* Preformatted Text
+  #+BEGIN_VERSE
+  This will have triple Curly braces (e.g {{{)
+  #+END_VERSE
+  
+  #+BEGIN_EXAMPLE
+  This will have triple Curly braces
+  #+END_EXAMPLE
+* blockquote
+  #+BEGIN_QUOTE
+      This is org-mode quote
+  #+END_QUOTE
+* Discussion Citations
+  *NOTE LIKELY*
+  >> ... (I said)
+  > (he replied)
+* Source code
+This is a \\
+line break
+#+BEGIN_SRC c++
+  class Foo : public Bar
+  {
+  public:
+      Foo(int val);
+      void doSometing();
+  private:
+      const int  _val;
+  }
+#+END_SRC
+
+              
+* Output    
+  #+BEGIN_EXAMPLE
+    = Heading 1
+    == Heading 2 #Explicit_ID
+    === Heading 3^([#Explicit_ID note])^
+    ==== Font Styles
+    * '''bold'''
+    * ''italic''
+    * ''''Wikipedia style'''
+    * `monospaced (*other markup ignored*)`
+    * Bullet list
+      on multiple lines
+      1. nested list
+         a. different numbering
+            styles
+    = Source code
+    This is a \\
+    line break
+    {{{
+    #!cpp
+    class Foo : public Bar
+    {
+    public:
+        Foo(int val);
+        void doSometing();
+    private:
+        const int  _val;
+    }
+    }}}
+  #+END_EXAMPLE
+
