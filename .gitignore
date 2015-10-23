@@ -1,5 +1,7 @@
 # Compiled
 *.elc
+*.~
+*.~[0-9]~
 
 # Packaging
 .cask

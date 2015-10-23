@@ -1,0 +1,100 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t title:t toc:nil todo:t |:t
+#+TITLE: tracwiki
+#+DATE: <2015-09-23 Wed>
+#+AUTHOR: Brian J. Carlson
+#+EMAIL: bcarlson@paradigm4.com
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 25.0.50.1 (Org mode 8.3.1)
+* Notes:
+** [[https://trac.scidb.net/wiki/WikiFormatting][Trac Wiki Formatting]]
+** Org things
+   * You can make words *bold*, /italic/, _underlined_, =verbatim= and
+     ~code~, and, if you must, +strike-through+
+   * sub_script super^{script}
+   * Blockquote
+     #+BEGIN_QUOTE
+     This is a blockquote
+     #+END_QUOTE
+   * 
+* Heading 1
+** Heading 2
+   :PROPERTIES:
+   :CUSTOM_ID: Explicit_ID
+   :END:
+*** Heading 3^{([[#Explicit_ID][note]])}
+*** Font Styles
+    #+BEGIN_EXAMPLE
+    \rightarrow should be \(\rightarrow\).
+    In other words LaTex should be enclosed in \( and \)
+    #+END_EXAMPLE
+    * *bold* \rightarrow   ='''bold'''= or =**bold**=
+    * /italic/ \rightarrow =''italic''= or =//italic//=
+    * /*Wikipedia style*/
+    * =monospaced (*other markup ignored*)=
+*** Paragraphs
+    First paragraph
+    on multiple lines
+
+    Second Paragraph
+*** Lists
+    * Bullet list
+      on multiple lines
+      1. nested list
+         1) different numbering
+            styles
+*** Definition Lists
+    * term :: definition on
+         multiple lines
+       
+
+* Source code
+This is a \\
+line break
+#+BEGIN_SRC c++
+  class Foo : public Bar
+  {
+  public:
+      Foo(int val);
+      void doSometing();
+  private:
+      const int  _val;
+  }
+#+END_SRC
+
+              
+* Output    
+  #+BEGIN_EXAMPLE
+    = Heading 1
+    == Heading 2 #Explicit_ID
+    === Heading 3^([#Explicit_ID note])^
+    ==== Font Styles
+    * '''bold'''
+    * ''italic''
+    * ''''Wikipedia style'''
+    * `monospaced (*other markup ignored*)`
+    * Bullet list
+      on multiple lines
+      1. nested list
+         a. different numbering
+            styles
+    = Source code
+    This is a \\
+    line break
+    {{{
+    #!cpp
+    class Foo : public Bar
+    {
+    public:
+        Foo(int val);
+        void doSometing();
+    private:
+        const int  _val;
+    }
+    }}}
+  #+END_EXAMPLE
+
