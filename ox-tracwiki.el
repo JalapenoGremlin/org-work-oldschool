@@ -30,7 +30,9 @@
 
 (eval-when-compile (require 'cl))
 (require 'ox-md)
+;;(require 'ox-ascii)
 (require 'ox-publish)
+(require 'rx)
 
 
 ;;; User-Configurable Variables
@@ -50,51 +52,90 @@ This variable can be set to either `atx' or `setext'."
 	  (const :tag "Use \"atx\" style" atx)
 	  (const :tag "Use \"Setext\" style" setext)))
 
+(defcustom org-tracwiki-lang-alist '(("emacs-lisp" . "elisp") )
+  "Alist of languages that are not recognized by Github, to
+  languages that are. Emacs lisp is a good example of this, where
+  we can use lisp as a nice replacement."
+  :group 'org-export-tracwiki)
+
+(defcustom org-tracwiki-footnote-separator "^, ^"
+  "Text used to separate footnotes."
+  :group 'org-export-tracwiki
+  :type 'string)
 
 
 ;;; Define Back-End
 
 
 
-(org-export-define-derived-backend 'tracwiki 'md
-  ;; :export-block '("MD" "MARKDOWN")
-  :filters-alist '((:filter-parse-tree . org-tracwiki-separate-elements))
-  :menu-entry
-  '(?T "Export to Tracwiki Wiki Formatting"
-       ((?T "To temporary buffer"
-	    (lambda (a s v b) (org-tracwiki-export-as-markdown a s v)))
-	(?t "To file" (lambda (a s v b) (org-tracwiki-export-to-markdown a s v)))
-	(?o "To file and open"
-	    (lambda (a s v b)
-	      (if a (org-tracwiki-export-to-markdown t s v)
-		(org-open-file (org-tracwiki-export-to-markdown nil s v)))))))
-  :translate-alist '((bold . org-tracwiki-bold)
-		     (code . org-tracwiki-verbatim)
-		     (example-block . org-tracwiki-example-block)
-		     (export-block . org-tracwiki-export-block)
-		     (fixed-width . org-tracwiki-example-block)
-		     (headline . org-tracwiki-headline)
-		     (horizontal-rule . org-tracwiki-horizontal-rule)
-		     (inline-src-block . org-tracwiki-verbatim)
-		     (inner-template . org-tracwiki-inner-template)
-		     (italic . org-tracwiki-italic)
-		     (item . org-tracwiki-item)
-		     (keyword . org-tracwiki-keyword)
-		     (line-break . org-tracwiki-line-break)
-		     (link . org-tracwiki-link)
-		     (node-property . org-tracwiki-node-property)
-		     (paragraph . org-tracwiki-paragraph)
-		     (plain-list . org-tracwiki-plain-list)
-		     (plain-text . org-tracwiki-plain-text)
-		     (property-drawer . org-tracwiki-property-drawer)
-		     (quote-block . org-tracwiki-quote-block)
-		     (section . org-tracwiki-section)
-		     (src-block . org-tracwiki-example-block)
-                     (subscript . org-tracwiki-subscript)
-                     (superscript . org-tracwiki-superscript)
-		     (template . org-tracwiki-template)
-		     (verbatim . org-tracwiki-verbatim))
-  :options-alist '((:tracwiki-headline-style nil nil org-tracwiki-headline-style)))
+(org-export-define-derived-backend
+ 'tracwiki 'ascii
+ ;; :export-block '("MD" "MARKDOWN")
+ :filters-alist '((:filter-parse-tree . org-tracwiki-separate-elements))
+ :menu-entry
+ '(?T "Export to Tracwiki Wiki Formatting"
+      ((?T "To temporary buffer"
+           (lambda (a s v b) (org-tracwiki-export-as-markdown a s v)))
+       (?t "To file" (lambda (a s v b) (org-tracwiki-export-to-markdown a s v)))
+       (?o "To file and open"
+           (lambda (a s v b)
+             (if a (org-tracwiki-export-to-markdown t s v)
+               (org-open-file (org-tracwiki-export-to-markdown nil s v)))))))
+ :translate-alist
+ '((bold . org-tracwiki-bold)
+   ;; center-block
+   ;; clock
+   (code . org-tracwiki-verbatim)
+   ;; drawer
+   ;; dynamic-block
+   (entity . org-tracwiki-entity)
+   (example-block . org-tracwiki-example-block)
+   (export-block . org-tracwiki-export-block)
+   ;; (export-snippet . org-tracwiki-export-snippet)
+   (fixed-width . org-tracwiki-example-block)
+   (footnote-definition . org-tracwiki-footnote-definition)
+;;  (footnote-definition . org-html-footnote-definition)
+   (footnote-reference . org-tracwiki-footnote-reference)
+   ;;(footnote-reference . org-html-footnote-reference)
+   (headline . org-tracwiki-headline)
+   ;;(horizontal-rule . org-tracwiki-horizontal-rule)
+   (inline-src-block . org-tracwiki-verbatim)
+   ;; (inlinetask . org-tracwiki-inlinetask)
+   (inner-template . org-tracwiki-inner-template)
+   (italic . org-tracwiki-italic)
+   (item . org-tracwiki-item)
+   (keyword . org-tracwiki-keyword)
+   ;; (latex-environment . org-tracwiki-latex-environment)
+   (latex-fragment . org-tracwiki-latex-fragment)
+   (line-break . org-tracwiki-line-break)
+   (link . org-tracwiki-link)
+   (node-property . org-tracwiki-node-property)
+   (paragraph . org-tracwiki-paragraph)
+   (plain-list . org-tracwiki-plain-list)
+   (plain-text . org-tracwiki-plain-text)
+   (property-drawer . org-tracwiki-property-drawer)
+   (quote-block . org-tracwiki-quote-block)
+   ;; (radio-target . org-tracwiki-radio-target)
+   (section . org-tracwiki-section)
+   ;; (special-block . org-tracwiki-special-block)
+   (src-block . org-tracwiki-src-block)
+   ;; (statistics-cookie . org-tracwiki-statistics-cookie)
+   ;; (strike-through . org-tracwiki-strike-through)
+   (subscript . org-tracwiki-subscript)
+   (superscript . org-tracwiki-superscript)
+   (table . org-tracwiki-table)
+   (table-cell . org-tracwiki-table-cell)
+   (table-row . org-tracwiki-table-row)
+   ;; (target . org-tracwiki-target)
+   (template . org-tracwiki-template)
+   ;; (timestamp . org-tracwiki-timestamp)
+   (underline . org-tracwiki-underline)
+   (verbatim . org-tracwiki-verbatim)
+   ;; (verse-block . org-tracwiki-verse-block)
+   )
+ :options-alist
+ '((:tracwiki-headline-style nil nil org-tracwiki-headline-style)
+   (:tracwiki-footnote-separator nil nil org-tracwiki-footnote-separator)))
 
 
 ;;; Filters
@@ -119,12 +160,14 @@ Assume BACKEND is `tracwiki'."
     (lambda (e)
       (org-element-put-property
        e :post-blank
-       (if (and (eq (org-element-type e) 'paragraph)
+       (if (or (and (eq (org-element-type e) 'paragraph)
 		(eq (org-element-type (org-element-property :parent e)) 'item)
 		(org-export-first-sibling-p e info)
 		(let ((next (org-export-get-next-element e info)))
 		  (and (eq (org-element-type next) 'plain-list)
 		       (not (org-export-get-next-element next info)))))
+               (eq (org-element-type e) 'table-row)
+               )
 	   0
 	 1))))
   ;; Return updated tree.
@@ -142,7 +185,7 @@ CONTENTS is the text within bold markup.  INFO is a plist used as
 a communication channel."
   (format "**%s**" contents))
 
-(defun org-html-superscript (superscript contents info)
+(defun org-tracwiki-superscript (superscript contents info)
   "Transcode a SUPERSCRIPT object from Org to TRACWIKI.
 CONTENTS is the contents of the object.  INFO is a plist holding
 contextual information."
@@ -169,6 +212,13 @@ channel."
 		  (t "``%s``"))
 	    value)))
 
+;;; Entity
+(defun org-tracwiki-entity (entity contents info)
+  "Transcode an ENTITY object from Org to TracWiki.
+CONTENTS are the definition itself.  INFO is a plist holding
+contextual information."
+  (concat "\\(" (org-element-property :latex entity) "\\)" ))
+
 
 ;;;; Example Block, Src Block and export Block
 
@@ -176,10 +226,13 @@ channel."
   "Transcode EXAMPLE-BLOCK element into Markdown format.
 CONTENTS is nil.  INFO is a plist used as a communication
 channel."
-  (replace-regexp-in-string
-   "^" "    "
-   (org-remove-indentation
-    (org-export-format-code-default example-block info))))
+  ;; (concat (replace-regexp-in-string
+  ;;          "^" "{{{\n"
+  ;;          (org-remove-indentation
+  ;;           (org-export-format-code-default example-block info))) "\n}}}")
+  (concat  "{{{\n" (org-remove-indentation
+                    (org-export-format-code-default example-block info)) "\n}}}")
+  )
 
 (defun org-tracwiki-export-block (export-block contents info)
   "Transcode a EXPORT-BLOCK element from Org to Markdown.
@@ -213,8 +266,9 @@ a communication channel."
 		 (let ((char (org-element-property :priority headline)))
 		   (and char (format "[#%c] " char)))))
 	   (anchor
-	    (and (plist-get info :with-toc)
-		 (format "<a id=\"%s\"></a>"
+	    (and (or (plist-get info :with-toc)
+                     (org-element-property :CUSTOM_ID headline))
+		 (format " #%s"
 			 (or (org-element-property :CUSTOM_ID headline)
 			     (org-export-get-reference headline info)))))
 	   ;; Headline text without tags.
@@ -240,20 +294,20 @@ a communication channel."
        ((eq style 'setext)
 	(concat heading tags anchor "\n"
 		(make-string (length heading) (if (= level 1) ?= ?-))
-		"\n\n"
+		"\n"
 		contents))
        ;; Use "atx" style.
-       (t (concat (make-string level ?=) " " heading tags anchor "\n\n"
+       (t (concat (make-string level ?=) " " heading tags anchor "\n"
 		  contents))))))
 
 
 ;;;; Horizontal Rule
 
-(defun org-tracwiki-horizontal-rule (horizontal-rule contents info)
-  "Transcode HORIZONTAL-RULE element into Markdown format.
-CONTENTS is the horizontal rule contents.  INFO is a plist used
-as a communication channel."
-  "---")
+;; (defun org-tracwiki-horizontal-rule (horizontal-rule contents info)
+;;   "Transcode HORIZONTAL-RULE element into Markdown format.
+;; CONTENTS is the horizontal rule contents.  INFO is a plist used
+;; as a communication channel."
+;;   "---")
 
 
 ;;;; Italic
@@ -273,27 +327,33 @@ CONTENTS is the item contents.  INFO is a plist used as
 a communication channel."
   (let* ((type (org-element-property :type (org-export-get-parent item)))
 	 (struct (org-element-property :structure item))
-	 (bullet (if (not (eq type 'ordered)) "-"
+	 (bullet (if (not (eq type 'ordered)) "*"
 		   (concat (number-to-string
 			    (car (last (org-list-get-item-number
 					(org-element-property :begin item)
 					struct
 					(org-list-prevs-alist struct)
 					(org-list-parents-alist struct)))))
-			   "."))))
-    (concat bullet
-	    (make-string (- 4 (length bullet)) ? )
-	    (case (org-element-property :checkbox item)
-	      (on "[X] ")
-	      (trans "[-] ")
-	      (off "[ ] "))
-	    (let ((tag (org-element-property :tag item)))
-	      (and tag (format "**%s:** "(org-export-data tag info))))
-	    (and contents
-		 (org-trim (replace-regexp-in-string "^" "    " contents))))))
-
-
-
+			   ".")))
+         (bullet-length (length bullet)))
+    ;; TODO This is ugly. 'descriptive was barnacled onto this
+    (cond ((eq type 'descriptive)
+           (let ((tag (org-element-property :tag item)))
+             (concat " " (or (org-export-data tag info) "(no_tag)") ":: "
+                   (and contents
+                        (org-trim (replace-regexp-in-string "^" (make-string (+ 3 (length tag)) ? ) contents))))))
+                     
+          (t 
+           (concat bullet
+                   " "
+                   (case (org-element-property :checkbox item)
+                     (on "[X] ")
+                     (trans "[-] ")
+                     (off "[ ] "))
+                   (let ((tag (org-element-property :tag item)))
+                     (and tag (format "**%s:** "(org-export-data tag info))))
+                   (and contents
+                        (org-trim (replace-regexp-in-string "^" (make-string (1+ bullet-length) ? ) contents))))))))
 ;;;; Keyword
 
 (defun org-tracwiki-keyword (keyword contents info)
@@ -311,15 +371,17 @@ channel."
   "Transcode LINE-BREAK object into Markdown format.
 CONTENTS is nil.  INFO is a plist used as a communication
 channel."
-  "  \n")
+  ;;(org-element-remove-indentation (format "\\\\(%s %S) \n" contents (org-get-indentation))))
+  "\\\\\n")
 
 
 ;;;; Link
-
 (defun org-tracwiki-link (link contents info)
   "Transcode LINE-BREAK object into Markdown format.
 CONTENTS is the link's description.  INFO is a plist used as
 a communication channel."
+  ;; TODO: So FAR, this is Very rudimentary: slightly modified
+  ;; org-md-link by only changing order of description and path
   (let ((link-org-files-as-tracwiki
 	 (lambda (raw-path)
 	   ;; Treat links to `file.org' as links to `file.md'.
@@ -338,11 +400,15 @@ a communication channel."
 	  (plain-text			; External file.
 	   (let ((path (funcall link-org-files-as-tracwiki destination)))
 	     (if (not contents) (format "<%s>" path)
-	       (format "[%s](%s)" contents path))))
+	       (format "[[%s|%s]]" path contents))))
 	  (headline
 	   (format
-	    "[%s](#%s)"
-	    ;; Description.
+	    "[[#%s|%s]]"
+
+            ;; Reference.
+	    (or (org-element-property :CUSTOM_ID destination)
+		(org-export-get-reference destination info))
+            ;; Description.
 	    (cond ((org-string-nw-p contents))
 		  ((org-export-numbered-headline-p destination info)
 		   (mapconcat #'number-to-string
@@ -350,9 +416,9 @@ a communication channel."
 			      "."))
 		  (t (org-export-data (org-element-property :title destination)
 				      info)))
-	    ;; Reference.
-	    (or (org-element-property :CUSTOM_ID destination)
-		(org-export-get-reference destination info))))
+
+
+            ))
 	  (t
 	   (let ((description
 		  (or (org-string-nw-p contents)
@@ -362,19 +428,19 @@ a communication channel."
 			 ((atom number) (number-to-string number))
 			 (t (mapconcat #'number-to-string number ".")))))))
 	     (when description
-	       (format "[%s](#%s)"
-		       description
-		       (org-export-get-reference destination info))))))))
-     ((org-export-inline-image-p link org-html-inline-image-rules)
-      (let ((path (let ((raw-path (org-element-property :path link)))
-		    (if (not (file-name-absolute-p raw-path)) raw-path
-		      (expand-file-name raw-path))))
-	    (caption (org-export-data
-		      (org-export-get-caption
-		       (org-export-get-parent-element link)) info)))
-	(format "![img](%s)"
-		(if (not (org-string-nw-p caption)) path
-		  (format "%s \"%s\"" path caption)))))
+	       (format "[[%s|#%s]]"
+		       (org-export-get-reference destination info)
+                       description)))))))
+     ;; ((org-export-inline-image-p link org-html-inline-image-rules)
+     ;;  (let ((path (let ((raw-path (org-element-property :path link)))
+     ;;    	    (if (not (file-name-absolute-p raw-path)) raw-path
+     ;;    	      (expand-file-name raw-path))))
+     ;;        (caption (org-export-data
+     ;;    	      (org-export-get-caption
+     ;;    	       (org-export-get-parent-element link)) info)))
+     ;;    (format "![img](%s)"
+     ;;    	(if (not (org-string-nw-p caption)) path
+     ;;    	  (format "%s \"%s\"" path caption)))))
      ((string= type "coderef")
       (let ((ref (org-element-property :path link)))
 	(format (org-export-get-coderef-format ref contents)
@@ -389,7 +455,7 @@ a communication channel."
 		  (org-export-file-uri (funcall link-org-files-as-tracwiki raw-path)))
 		 (t raw-path))))
 	  (if (not contents) (format "<%s>" path)
-	    (format "[%s](%s)" contents path)))))))
+	    (format "[[%s|%s]]" path contents)))))))
 
 
 ;;;; Node Property
@@ -432,24 +498,12 @@ a communication channel."
   "Transcode a TEXT string into Markdown format.
 TEXT is the string to transcode.  INFO is a plist holding
 contextual information."
-  (when (plist-get info :with-smart-quotes)
-    (setq text (org-export-activate-smart-quotes text :html info)))
-  ;; Protect ambiguous #.  This will protect # at the beginning of
-  ;; a line, but not at the beginning of a paragraph.  See
-  ;; `org-tracwiki-paragraph'.
-  (setq text (replace-regexp-in-string "\n#" "\n\\\\#" text))
-  ;; Protect ambiguous !
-  (setq text (replace-regexp-in-string "\\(!\\)\\[" "\\\\!" text nil nil 1))
-  ;; Protect `, *, _ and \
-  (setq text (replace-regexp-in-string "[`*_\\]" "\\\\\\&" text))
-  ;; Handle special strings, if required.
-  (when (plist-get info :with-special-strings)
-    (setq text (org-html-convert-special-strings text)))
-  ;; Handle break preservation, if required.
-  (when (plist-get info :preserve-breaks)
-    (setq text (replace-regexp-in-string "[ \t]*\n" "  \n" text)))
-  ;; Return value.
+  (setq text (replace-regexp-in-string "\\^" "!^" text))
+  (let ((case-fold-search nil))
+    (setq text (replace-regexp-in-string   (rx bow (group (and  upper (one-or-more lower) (+  (and upper (one-or-more lower))))) eow)
+                                        "!\\1" text)))
   text)
+
 
 
 ;;;; Property Drawer
@@ -469,8 +523,8 @@ holding contextual information."
 CONTENTS is the quote-block contents.  INFO is a plist used as
 a communication channel."
   (replace-regexp-in-string
-   "^" "> "
-   (replace-regexp-in-string "\n\\'" "" contents)))
+   "^" "     "
+   (replace-regexp-in-string "\n +'" " " contents)))
 
 
 ;;;; Section
@@ -481,16 +535,112 @@ CONTENTS is the section contents.  INFO is a plist used as
 a communication channel."
   contents)
 
+;;; Source Block
+(defun org-tracwiki-src-block (src-block contents info)
+  "Transcode SRC-BLOCK element into Github Flavored Markdown
+format. CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+  (let* ((lang (org-element-property :language src-block))
+         (lang (or (assoc-default lang org-tracwiki-lang-alist) lang))
+         (code (org-export-format-code-default src-block info))
+         (prefix (concat "{{{\n#!" lang "\n"))
+         (suffix "\n}}}"))
+    (concat prefix code suffix)))
+
 
 ;;;; Template
+(defun org-tracwiki--translate (s info)
+  "Translate string S according to specified language.
+INFO is a plist used as a communication channel."
+  (org-export-translate s :default info))
+
+
+(defun org-tracwiki--anchor (id desc attributes info)
+  "Format a HTML anchor."
+  ;; (let* ((name (and (plist-get info :html-allow-name-attribute-in-anchors) id))
+  ;;        (attributes (concat (and id (format " id=\"%s\"" id))
+  ;;       		     (and name (format " name=\"%s\"" name))
+  ;;       		     attributes)))
+  ;;   (format "<a%s>%s</a>" attributes (or desc "")))
+    (format "[=%s][#%s %s]" id attributes desc)
+    )
+
+;; TODO
+(defun org-tracwiki-footnote-reference (footnote-reference contents info)
+  "Transcode a FOOTNOTE-REFERENCE element from Org to HTML.
+CONTENTS is nil.  INFO is a plist holding contextual information."
+  (concat
+   ;; Insert separator between two footnotes in a row.
+   (let ((prev (org-export-get-previous-element footnote-reference info)))
+     (when (eq (org-element-type prev) 'footnote-reference)
+       (plist-get info :tracwiki-footnote-separator)))
+   (let* ((n (org-export-get-footnote-number footnote-reference info))
+	  (id (format "#fnr.%d%s"
+		      n
+		      (if (org-export-footnote-first-reference-p
+			   footnote-reference info)
+			  ""
+			".100"))))
+     (format
+      "^%s^" ;; TODO fix me
+      ;;(plist-get info :html-footnote-format)
+      (org-tracwiki--anchor
+       id n (format "fn.%d" n) info)))))
+
+(defun org-tracwiki-footnote-section (info)
+  "Format the footnote section.
+INFO is a plist used as a communication channel."
+
+    (let* ((fn-alist (org-export-collect-footnote-definitions info))
+	 (fn-alist
+	  (loop for (n type raw) in fn-alist collect
+		(cons n (if (eq (org-element-type raw) 'org-data)
+			    (org-trim (org-export-data raw info))
+			  (format "<div class=\"footpara\">%s</div>"
+				  (org-trim (org-export-data raw info))))))))
+    (when fn-alist
+      (format
+       ;;(plist-get info :html-footnotes-section)
+       "= %s %s"
+       (org-tracwiki--translate "Footnotes" info)
+       (format
+	"\n%s\n"
+	(mapconcat
+	 (lambda (fn)
+	   (let ((n (car fn)) (def (cdr fn)))
+	     (format
+	      "<div class=\"footdef\">%s %s</div>\n"
+	      (format
+	       ;; (plist-get info :html-footnote-format)
+               "^%s^"
+	       (org-html--anchor
+		(format "fn.%d" n)
+		n
+		(format " class=\"footnum\" href=\"#fnr.%d\"" n)
+		info))
+	      def)))
+	 fn-alist
+	 "\n"))))))
+
+  
 
 (defun org-tracwiki-inner-template (contents info)
-  "Return body of document after converting it to Markdown syntax.
+  "Return body of document string after HTML conversion.
 CONTENTS is the transcoded contents string.  INFO is a plist
 holding export options."
-  ;; Make sure CONTENTS is separated from table of contents and
-  ;; footnotes with at least a blank line.
-  (org-trim (org-html-inner-template (concat "\n" contents "\n") info)))
+  (concat
+   ;; Table of contents.
+   (let ((depth (plist-get info :with-toc)))
+     (when depth "[[PageOutline]]\n"))
+   ;; Document contents.
+   "\n"
+   contents
+   "\n"
+   ;; Footnotes section.
+   ;; TODO
+   ;;   (org-tracwiki-footnote-section info)
+   (org-tracwiki-footnote-section info)
+   ))
 
 (defun org-tracwiki-template (contents info)
   "Return complete document string after Markdown conversion.
@@ -575,7 +725,56 @@ publishing directory.
 Return output file name."
   (org-publish-org-to 'md filename ".md" plist pub-dir))
 
-(provide 'ox-tracwikiwiki)
+
+(defun org-tracwiki-underline (underline contents info)
+  "Transcode UNDERLINE from Org to HTML.
+CONTENTS is the text with underline markup.  INFO is a plist
+holding contextual information."
+  ;; (format (or (cdr (assq 'underline (plist-get info :html-text-markup-alist)))
+  ;;             "%s")
+  ;;         contents)
+  (format  "__%s__" contents)
+  )
+
+(defun org-tracwiki-latex-fragment (latex-fragment contents info)
+  "Transcode a LATEX-FRAGMENT object from Org to LaTeX.
+CONTENTS is nil.  INFO is a plist holding contextual information."
+  (let ((value (org-element-property :value latex-fragment)))
+    (setq value (replace-regexp-in-string "\\$\\([^$]+\\)\\$" "\\\\(\\1\\\\)"  value))))
+
+(defun org-tracwiki-table (table contents info)
+  (concat ;; "[TABLE]"
+          contents
+          ;;"[/TABLE]"
+          ))
+
+(defun org-tracwiki-table-row  (table-row contents info)
+  (concat "||" contents)
+  ;; (concat ;; "[TABLE_ROW]"
+  ;;                   (if (org-string-nw-p contents) (format "|%s" contents)
+  ;;                     "||")
+  ;;                   (when (org-export-table-row-ends-header-p table-row info)
+  ;;                     "||")
+  ;;                   ;;"[/TABLE_ROW]\n\n\n"
+  ;;                   )
+  )
+
+(defun org-tracwiki-table-cell  (table-cell contents info)
+  (let ((table-row (org-export-get-parent table-cell)))
+    (concat ;;"[TABLE_CELL]"
+     (if (org-export-table-row-starts-header-p table-row info)
+         "="
+       )
+     (if (eq (length contents) 0)
+       " ")
+     contents
+     (if (org-export-table-row-starts-header-p table-row info)
+         "=||" "||")
+     ;;     "[/TABLE_CELL]"
+     )))
+
+
+(provide 'ox-tracwiki)
 ;; Local variables:
 ;; generated-autoload-file: "org-loaddefs.el"
 ;; End:

@@ -1,0 +1,13 @@
+* TODO Footnotes ( [[file:~/src/ox-tracwiki/tracwiki.org::*Heading%203%20%5Bfn:hn:%20This%20is%20the%20footnote%20for%20=fn.1=%5D][Heading 3 {fn:hn: This is the footnote for =fn.1=}]])
+* TODO Changing sequence in subsequent bullets
+  #+BEGIN_EXAMPLE
+  1. item
+     a. notice that this is *a*
+        i. notice that this is /i/
+  #+END_EXAMPLE
+  #+BEGIN_SRC org
+    1. item
+       1) notice that this is using a next level
+          1. notice this is the third level
+      
+  #+END_SRC
